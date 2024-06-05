@@ -12,6 +12,15 @@ export default function HomeScreen({ navigation }) {
     }
   };
 
+  const buttons = [
+    { id: 1, label: 'Rotas Preferidas', icon: 'star' },
+    { id: 2, label: 'Banco', icon: 'credit-card' },
+    { id: 3, label: 'Clínica Médica', icon: 'local-hospital' },
+    { id: 4, label: 'Escola', icon: 'school' },
+    { id: 5, label: 'Farmácia', icon: 'local-pharmacy' },
+    { id: 6, label: 'Mercearia', icon: 'shopping-cart' },
+  ];
+
   return (
     <View style={styles.container}>
       <View style={styles.search}>
@@ -23,20 +32,23 @@ export default function HomeScreen({ navigation }) {
         />
       </View>
 
-      <TouchableOpacity
-        style={[styles.button, selectedIndex === 1 && styles.selectedButton]}
-        onPress={() => handleListItemClick(1)}
-      >
-        <MaterialIcons 
-          name="star" 
-          size={30} 
-          color={selectedIndex === 1 ? '#005AEE' : '#ffffff'}
-          style={styles.icon}
-        />
-        <Text style={[styles.buttonText, selectedIndex === 1 && styles.selectedButtonText]}>
-          Rotas Preferidas
-        </Text>
-      </TouchableOpacity>
+      {buttons.map((button) => (
+        <TouchableOpacity
+          key={button.id}
+          style={[styles.button, selectedIndex === button.id && styles.selectedButton]}
+          onPress={() => handleListItemClick(button.id)}
+        >
+          <MaterialIcons 
+            name={button.icon} 
+            size={30} 
+            color={selectedIndex === button.id ? '#005AEE' : '#ffffff'}
+            style={styles.icon}
+          />
+          <Text style={[styles.buttonText, selectedIndex === button.id && styles.selectedButtonText]}>
+            {button.label}
+          </Text>
+        </TouchableOpacity>
+      ))}
 
       <View style={styles.divider} />
     </View>

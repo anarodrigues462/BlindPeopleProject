@@ -28,7 +28,7 @@ export default function Banco() {
     <View style={{flexDirection: "column"}}>
       <View style={{ height: "65%", flexDirection: "column"}}>
         <MapView style={{ ...StyleSheet.absoluteFillObject }} 
-        provider="google"
+   
         ref = {(ref) => { this.mapRef = ref }}
         initialRegion={{
           latitude: 6.8523,
@@ -38,7 +38,7 @@ export default function Banco() {
         }}
         />
       </View>
-      <View style={{ height: "35%", backgroundColor: "#005AEE" ,flexDirection: "column"}}>
+      <View style={{ height: "35%", flexDirection: "column"}}>
 {buttons.map((button) => (
         <TouchableOpacity
           key={button.id}

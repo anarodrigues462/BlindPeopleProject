@@ -1,22 +1,43 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import MapView, { Marker, Polyline } from 'react-native-maps';
+import MapView, { Marker } from 'react-native-maps';
+import { MaterialIcons } from '@expo/vector-icons';
 
 export default function Banco() {
   const [startCoords, setStartCoords] = useState({ latitude: 6.8523, longitude: 79.8895 }); // Coordenadas manuais para o ponto de partida
   const [endCoords, setEndCoords] = useState({ latitude: 6.8497, longitude: 79.9502 }); // Coordenadas manuais para o ponto de destino
-  const [route, setRoute] = useState(null);
+  const [direction, setDirection] = useState(null);
 
-  const handleGetDirections = async () => {
-    const response = await fetch(
-      `http://router.project-osrm.org/route/v1/driving/${startCoords.longitude},${startCoords.latitude};${endCoords.longitude},${endCoords.latitude}?geometries=geojson`
-    );
-    const data = await response.json();
-    const coordinates = data.routes[0].geometry.coordinates.map(coord => ({
-      latitude: coord[1],
-      longitude: coord[0],
-    }));
-    setRoute(coordinates);
+  const handleGetDirections = () => {
+    const bearing = calculateBearing(startCoords.latitude, startCoords.longitude, endCoords.latitude, endCoords.longitude);
+    setDirection(bearing);
+  };
+
+  const calculateBearing = (startLat, startLng, endLat, endLng) => {
+    const startLatRad = toRadians(startLat);
+    const startLngRad = toRadians(startLng);
+    const endLatRad = toRadians(endLat);
+    const endLngRad = toRadians(endLng);
+
+    const deltaLng = endLngRad - startLngRad;
+
+    const y = Math.sin(deltaLng) * Math.cos(endLatRad);
+    const x = Math.cos(startLatRad) * Math.sin(endLatRad) -
+              Math.sin(startLatRad) * Math.cos(endLatRad) * Math.cos(deltaLng);
+
+    let bearing = Math.atan2(y, x);
+    bearing = toDegrees(bearing);
+    bearing = (bearing + 360) % 360;
+
+    return bearing;
+  };
+
+  const toRadians = (degrees) => {
+    return degrees * Math.PI / 180;
+  };
+
+  const toDegrees = (radians) => {
+    return radians * 180 / Math.PI;
   };
 
   return (
@@ -32,10 +53,15 @@ export default function Banco() {
       >
         {startCoords && <Marker coordinate={startCoords} title="Ponto de Partida" />}
         {endCoords && <Marker coordinate={endCoords} title="Ponto de Destino" />}
-        {route && <Polyline coordinates={route} strokeWidth={4} strokeColor="blue" />}
+        {direction && (
+          <View style={styles.directionContainer}>
+            <Text style={styles.directionText}>Siga na direção {direction}°</Text>
+          </View>
+        )}
       </MapView>
       <View style={styles.buttonContainer}>
         <TouchableOpacity style={styles.button} onPress={handleGetDirections}>
+          <MaterialIcons name="directions" size={30} color="#ffffff" />
           <Text style={styles.buttonText}>Obter Direções</Text>
         </TouchableOpacity>
       </View>
@@ -53,13 +79,26 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
   button: {
+    flexDirection: 'row',
     backgroundColor: '#005AEE',
-    paddingVertical: 10,
-    paddingHorizontal: 20,
     borderRadius: 10,
+    padding: 10,
+    alignItems: 'center',
   },
   buttonText: {
     color: '#ffffff',
+    marginLeft: 10,
     fontSize: 18,
+  },
+  directionContainer: {
+    position: 'absolute',
+    top: 20,
+    alignSelf: 'center',
+    backgroundColor: '#ffffff',
+    borderRadius: 10,
+    padding: 10,
+  },
+  directionText: {
+    fontSize: 16,
   },
 });

@@ -2,6 +2,7 @@ import React from 'react';
 import MapView from 'react-native-maps';
 import { TouchableOpacity, StyleSheet, Platform, View, Text } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons'; 
+import Geolocation from '@react-native-community/geolocation';
 
 export default function Banco() {
 

@@ -10,8 +10,8 @@ export default function HomeScreen({ navigation }) {
     if (index === 1) {
       navigation.navigate('Rotas Preferidas');
     } 
-    if (index === 2){
-        navigation.navigate('Banco');
+    if (index === 4){
+        navigation.navigate('Escola');
     }
   };
 

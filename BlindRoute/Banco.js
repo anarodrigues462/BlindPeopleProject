@@ -1,6 +1,7 @@
 import React from 'react';
 import MapView from 'react-native-maps';
-import { StyleSheet, Platform, View } from 'react-native';
+import { TouchableOpacity, StyleSheet, Platform, View, Text } from 'react-native';
+import { MaterialIcons } from '@expo/vector-icons'; 
 
 export default function Banco() {
 

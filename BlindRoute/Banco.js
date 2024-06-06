@@ -38,7 +38,7 @@ export default function Banco() {
         }}
         />
       </View>
-      <View style={{ height: "35%", flexDirection: "column"}}>
+      <View style={{ height: "35%", backgroundColor: "#005AEE" ,flexDirection: "column"}}>
 {buttons.map((button) => (
         <TouchableOpacity
           key={button.id}

@@ -8,7 +8,10 @@ export default function HomeScreen({ navigation }) {
   const handleListItemClick = (index) => {
     setSelectedIndex(index);
     if (index === 1) {
-      navigation.navigate('Details');
+      navigation.navigate('Rotas Preferidas');
+    } 
+    if (index === 2){
+        navigation.navigate('Banco');
     }
   };
 

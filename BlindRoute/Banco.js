@@ -1,74 +1,97 @@
-import React from 'react';
-import MapView from 'react-native-maps';
-import { TouchableOpacity, StyleSheet, Platform, View, Text } from 'react-native';
-import { MaterialIcons } from '@expo/vector-icons'; 
-
+import React, { useEffect, useState } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import MapView, { Marker } from 'react-native-maps';
+import { MaterialIcons } from '@expo/vector-icons';
+import * as Location from 'expo-location';
+import { GOOGLE_MAPS_API_KEY } from 'AIzaSyC3NH0O87rYLkmKvYDcaF__lOn-hlpnvFI'; // Substitua por sua chave de API
 
 export default function Banco() {
+  const [location, setLocation] = useState(null);
+  const [errorMsg, setErrorMsg] = useState(null);
+  const [banks, setBanks] = useState([]);
 
-  const [selectedIndex, setSelectedIndex] = React.useState(1);
+  useEffect(() => {
+    (async () => {
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== 'granted') {
+        setErrorMsg('Permissão para acessar a localização foi negada.');
+        return;
+      }
 
-  const handleListItemClick = (index) => {
-    setSelectedIndex(index);
-    if (index === 1) {
-      navigation.navigate('Rotas Preferidas');
-    } 
-    if (index === 2){
-        navigation.navigate('Banco');
+      let location = await Location.getCurrentPositionAsync({});
+      setLocation(location);
+    })();
+  }, []);
+
+  useEffect(() => {
+    if (location) {
+      fetchBanksNearby(location.coords.latitude, location.coords.longitude);
+    }
+  }, [location]);
+
+  const fetchBanksNearby = async (latitude, longitude) => {
+    try {
+      const response = await fetch(
+        `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${latitude},${longitude}&radius=5000&type=bank&key=${GOOGLE_MAPS_API_KEY}`
+      );
+      const data = await response.json();
+      setBanks(data.results);
+    } catch (error) {
+      console.error('Erro ao buscar bancos:', error);
     }
   };
 
-  const buttons = [
-    { id: 1, label: 'Rotas Preferidas', icon: 'star' },
-    { id: 2, label: 'Banco', icon: 'credit-card' },
-    { id: 3, label: 'Clínica Médica', icon: 'local-hospital' },
-    { id: 4, label: 'Escola', icon: 'school' },
-  ]
-
   return (
-    <View style={{flexDirection: "column"}}>
-      <View style={{ height: "65%", flexDirection: "column"}}>
-        <MapView style={{ ...StyleSheet.absoluteFillObject }} 
-   
-        ref = {(ref) => { this.mapRef = ref }}
-        initialRegion={{
-          latitude: 6.8523,
-          longitude: 79.8895,
+    <View style={{ flex: 1 }}>
+      <MapView
+        style={styles.map}
+        region={{
+          latitude: location ? location.coords.latitude : 0,
+          longitude: location ? location.coords.longitude : 0,
           latitudeDelta: 0.0922,
-          longitudeDelta: 0.0421
+          longitudeDelta: 0.0421,
         }}
-        />
-      </View>
-      <View style={{ height: "35%", flexDirection: "column"}}>
-{buttons.map((button) => (
-        <TouchableOpacity
-          key={button.id}
-          style={[styles.button, selectedIndex === button.id && styles.selectedButton]}
-          onPress={() => handleListItemClick(button.id)}
-        >
-          <MaterialIcons 
-            name={button.icon} 
-            size={30} 
-            color={selectedIndex === button.id ? '#005AEE' : '#ffffff'}
-            style={styles.icon}
+      >
+        {banks.map((bank, index) => (
+          <Marker
+            key={index}
+            coordinate={{
+              latitude: bank.geometry.location.lat,
+              longitude: bank.geometry.location.lng,
+            }}
+            title={bank.name}
           />
-          <Text style={[styles.buttonText, selectedIndex === button.id && styles.selectedButtonText]}>
-            {button.label}
-          </Text>
+        ))}
+      </MapView>
+      <View style={styles.buttonContainer}>
+        <TouchableOpacity style={styles.button}>
+          <MaterialIcons name="credit-card" size={30} color="#ffffff" />
+          <Text style={styles.buttonText}>Banco</Text>
         </TouchableOpacity>
-      ))}
       </View>
-      
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
+  map: {
     flex: 1,
   },
-  map: {
-    width: '100%',
-    height: '100%',
+  buttonContainer: {
+    position: 'absolute',
+    bottom: 20,
+    alignSelf: 'center',
+  },
+  button: {
+    flexDirection: 'row',
+    backgroundColor: '#005AEE',
+    borderRadius: 10,
+    padding: 10,
+    alignItems: 'center',
+  },
+  buttonText: {
+    color: '#ffffff',
+    marginLeft: 10,
+    fontSize: 18,
   },
 });

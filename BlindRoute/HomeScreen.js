@@ -2,7 +2,6 @@ import React from 'react';
 import { View, Text, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons'; 
 
-
 export default function HomeScreen({ navigation }) {
   const [selectedIndex, setSelectedIndex] = React.useState(1);
 

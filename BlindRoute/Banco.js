@@ -27,7 +27,16 @@ export default function Banco() {
   return (
     <View style={{flexDirection: "column"}}>
       <View style={{ height: "65%", flexDirection: "column"}}>
-        <MapView style={styles.map} />
+        <MapView style={{ ...StyleSheet.absoluteFillObject }} 
+        provider="google"
+        ref = {(ref) => { this.mapRef = ref }}
+        initialRegion={{
+          latitude: 6.8523,
+          longitude: 79.8895,
+          latitudeDelta: 0.0922,
+          longitudeDelta: 0.0421
+        }}
+        />
       </View>
       <View style={{ height: "35%", flexDirection: "column"}}>
 {buttons.map((button) => (

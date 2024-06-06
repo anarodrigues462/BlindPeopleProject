@@ -3,8 +3,8 @@ import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import MapView, { Marker, Polyline } from 'react-native-maps';
 
 export default function Banco() {
-  const [startCoords, setStartCoords] = useState({ latitude: 6.8523, longitude: 79.8895 }); 
-  const [endCoords, setEndCoords] = useState({ latitude: 6.8497, longitude: 79.9502 });
+  const [startCoords, setStartCoords] = useState({ latitude: 40.18661, longitude: -8.41611 }); 
+  const [endCoords, setEndCoords] = useState({ latitude: 40.18534, longitude: -8.4123 });
   const [route, setRoute] = useState(null);
 
   const handleGetDirections = async () => {

@@ -1,38 +1,19 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 import { MaterialIcons } from '@expo/vector-icons';
-import * as Location from 'expo-location';
-import { GOOGLE_MAPS_API_KEY } from 'AIzaSyC3NH0O87rYLkmKvYDcaF__lOn-hlpnvFI'; 
 
 export default function Banco() {
-  const [location, setLocation] = useState(null);
-  const [errorMsg, setErrorMsg] = useState(null);
   const [banks, setBanks] = useState([]);
 
   useEffect(() => {
-    (async () => {
-      let { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== 'granted') {
-        setErrorMsg('Permissão para acessar a localização foi negada.');
-        return;
-      }
-
-      let location = await Location.getCurrentPositionAsync({});
-      setLocation(location);
-    })();
+    fetchBanksNearby(6.8523, 79.8895); // Coordenadas manualmente definidas (latitude e longitude)
   }, []);
-
-  useEffect(() => {
-    if (location) {
-      fetchBanksNearby(location.coords.latitude, location.coords.longitude);
-    }
-  }, [location]);
 
   const fetchBanksNearby = async (latitude, longitude) => {
     try {
       const response = await fetch(
-        `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${latitude},${longitude}&radius=5000&type=bank&key=${GOOGLE_MAPS_API_KEY}`
+        `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${latitude},${longitude}&radius=5000&type=bank&key=YOUR_API_KEY`
       );
       const data = await response.json();
       setBanks(data.results);
@@ -46,8 +27,8 @@ export default function Banco() {
       <MapView
         style={styles.map}
         region={{
-          latitude: location ? location.coords.latitude : 0,
-          longitude: location ? location.coords.longitude : 0,
+          latitude: 6.8523,
+          longitude: 79.8895,
           latitudeDelta: 0.0922,
           longitudeDelta: 0.0421,
         }}

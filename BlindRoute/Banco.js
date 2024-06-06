@@ -2,7 +2,6 @@ import React from 'react';
 import MapView from 'react-native-maps';
 import { TouchableOpacity, StyleSheet, Platform, View, Text } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons'; 
-import Geolocation from '@react-native-community/geolocation';
 
 export default function Banco() {
 
@@ -25,27 +24,11 @@ export default function Banco() {
     { id: 4, label: 'Escola', icon: 'school' },
   ]
 
-  getMyLocation = () => {
-    Geolocation.getCurrentOisutuib(loc => {
-      this.mapRef.animateToRegion({
-        latitude: loc.coords.latitude,
-        longitude: loc.coords.longitude,
-        latitudeDelta: 0.0922,
-        longitudeDelta: 0.0421,
-      })
-      this.setStade({
-        latitude: loc.coords.latitude,
-        longitude: loc.coords.longitude
-      })
-    })
-  }
-
   return (
     <View style={{flexDirection: "column"}}>
       <View style={{ height: "65%", flexDirection: "column"}}>
         <MapView style={{ ...StyleSheet.absoluteFillObject }} 
         provider="google"
-        onMapReady={() => {this.getMyLocation()}}
         ref = {(ref) => { this.mapRef = ref }}
         initialRegion={{
           latitude: 6.8523,

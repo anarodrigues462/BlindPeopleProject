@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import MapView, { Marker, Polyline } from 'react-native-maps';
 
-export default function Banco() {
+export default function Escola() {
   const [startCoords, setStartCoords] = useState({ latitude: 40.18661, longitude: -8.41611 }); 
   const [endCoords, setEndCoords] = useState({ latitude: 40.18534, longitude: -8.4123 });
   const [route, setRoute] = useState(null);
@@ -32,7 +32,7 @@ export default function Banco() {
       >
         {startCoords && <Marker coordinate={startCoords} title="Ponto de Partida" />}
         {endCoords && <Marker coordinate={endCoords} title="Ponto de Destino" />}
-        {route && <Polyline coordinates={route} strokeWidth={4} strokeColor="blue" />}
+        {route && <Polyline coordinates={route} strokeWidth={5} strokeColor="#005AEE" />}
       </MapView>
       <View style={styles.buttonContainer}>
         <TouchableOpacity style={styles.button} onPress={handleGetDirections}>

@@ -5,7 +5,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import HomeScreen from './HomeScreen';
 import RotasPreferidas from './RotasPreferidas';
-import Banco from './Banco';
+import Escola from './Escola';
 
 const Stack = createNativeStackNavigator();
 
@@ -15,7 +15,7 @@ function App() {
       <Stack.Navigator>
         <Stack.Screen name="BlindRoute" component={HomeScreen} />
         <Stack.Screen name="Rotas Preferidas" component={RotasPreferidas} />    
-        <Stack.Screen name="Banco" component={Banco} />
+        <Stack.Screen name="Escola" component={Escola} />
       </Stack.Navigator>
     </NavigationContainer>
   );

@@ -22,7 +22,7 @@ export default function HomeScreen({ navigation }) {
     { id: 4, label: 'Escola', icon: 'school' },
     { id: 5, label: 'Farmácia', icon: 'local-pharmacy' },
     { id: 6, label: 'Mercearia', icon: 'shopping-cart' },
-    { id: 7, label: 'botao novo', icon: 'shopping-cart' },
+
   ];
 
   return (

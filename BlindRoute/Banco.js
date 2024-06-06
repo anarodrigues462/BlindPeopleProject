@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Linking } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 import { MaterialIcons } from '@expo/vector-icons';
 
 export default function Banco() {
   const [banks, setBanks] = useState([]);
+  const [nearestBank, setNearestBank] = useState(null);
 
   useEffect(() => {
     fetchBanksNearby(6.8523, 79.8895); // Coordenadas manualmente definidas (latitude e longitude)
@@ -17,8 +18,22 @@ export default function Banco() {
       );
       const data = await response.json();
       setBanks(data.results);
+
+      // Encontrar o banco mais próximo
+      if (data.results.length > 0) {
+        const nearest = data.results[0];
+        setNearestBank(nearest);
+      }
     } catch (error) {
       console.error('Erro ao buscar bancos:', error);
+    }
+  };
+
+  const handleGetDirections = () => {
+    if (nearestBank) {
+      const { lat, lng } = nearestBank.geometry.location;
+      const url = `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`;
+      Linking.openURL(url);
     }
   };
 
@@ -45,9 +60,9 @@ export default function Banco() {
         ))}
       </MapView>
       <View style={styles.buttonContainer}>
-        <TouchableOpacity style={styles.button}>
-          <MaterialIcons name="credit-card" size={30} color="#ffffff" />
-          <Text style={styles.buttonText}>Banco</Text>
+        <TouchableOpacity style={styles.button} onPress={handleGetDirections}>
+          <MaterialIcons name="directions" size={30} color="#ffffff" />
+          <Text style={styles.buttonText}>Obter Direções</Text>
         </TouchableOpacity>
       </View>
     </View>
